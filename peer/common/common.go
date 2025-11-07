@@ -121,6 +121,12 @@ func InitConfig(cmdRoot string) error {
 // InitCrypto initializes crypto for this peer
 func InitCrypto(mspMgrConfigDir, localMSPID, localMSPType string) error {
 	var err error
+	if msp.MSPBypassEnabled() {
+		if localMSPID == "" {
+			localMSPID = "BypassMSP"
+		}
+		return mspmgmt.LoadLocalMspWithType("", nil, localMSPID, localMSPType)
+	}
 	// Check whether msp folder exists
 	fi, err := os.Stat(mspMgrConfigDir)
 	if os.IsNotExist(err) || !fi.IsDir() {

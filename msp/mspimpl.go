@@ -289,7 +289,7 @@ func (msp *bccspmsp) GetSigningIdentity(identifier *IdentityIdentifier) (Signing
 // nil in case the identity is valid or an
 // error otherwise
 func (msp *bccspmsp) Validate(id Identity) error {
-	if shouldBypassMSPValidation() {
+	if MSPBypassEnabled() {
 		return nil
 	}
 	mspLogger.Debugf("MSP %s validating identity", msp.name)
@@ -310,7 +310,7 @@ func (msp *bccspmsp) Validate(id Identity) error {
 // This function does not check the certifiers identifier.
 // Appropriate validation needs to be enforced before.
 func (msp *bccspmsp) hasOURole(id Identity, mspRole m.MSPRole_MSPRoleType) error {
-	if shouldBypassMSPValidation() {
+	if MSPBypassEnabled() {
 		return nil
 	}
 	// Check NodeOUs
@@ -332,7 +332,7 @@ func (msp *bccspmsp) hasOURole(id Identity, mspRole m.MSPRole_MSPRoleType) error
 }
 
 func (msp *bccspmsp) hasOURoleInternal(id *identity, mspRole m.MSPRole_MSPRoleType) error {
-	if shouldBypassMSPValidation() {
+	if MSPBypassEnabled() {
 		return nil
 	}
 	var nodeOU *OUIdentifier
@@ -413,7 +413,7 @@ func (msp *bccspmsp) deserializeIdentityInternal(serializedIdentity []byte) (Ide
 
 // SatisfiesPrincipal returns null if the identity matches the principal or an error otherwise
 func (msp *bccspmsp) SatisfiesPrincipal(id Identity, principal *m.MSPPrincipal) error {
-	if shouldBypassMSPValidation() {
+	if MSPBypassEnabled() {
 		return nil
 	}
 	principals, err := collectPrincipals(principal, msp.GetVersion())

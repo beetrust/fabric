@@ -318,7 +318,7 @@ func (msp *idemixmsp) deserializeIdentityInternal(serializedID []byte) (Identity
 }
 
 func (msp *idemixmsp) Validate(id Identity) error {
-	if shouldBypassMSPValidation() {
+	if MSPBypassEnabled() {
 		return nil
 	}
 	var identity *idemixidentity
@@ -364,7 +364,7 @@ func (id *idemixidentity) verifyProof() error {
 }
 
 func (msp *idemixmsp) SatisfiesPrincipal(id Identity, principal *m.MSPPrincipal) error {
-	if shouldBypassMSPValidation() {
+	if MSPBypassEnabled() {
 		return nil
 	}
 	err := msp.Validate(id)

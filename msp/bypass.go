@@ -17,6 +17,7 @@ func parseBypassEnv() bool {
 	}
 }
 
-func shouldBypassMSPValidation() bool {
+// MSPBypassEnabled indicates whether MSP validation/loading safeguards should be skipped.
+func MSPBypassEnabled() bool {
 	return bypassMSPValidation
 }

@@ -21,7 +21,15 @@ import (
 // LoadLocalMspWithType loads the local MSP with the specified type from the specified directory
 func LoadLocalMspWithType(dir string, bccspConfig *factory.FactoryOpts, mspID, mspType string) error {
 	if mspID == "" {
-		return errors.New("the local MSP must have an ID")
+		if msp.MSPBypassEnabled() {
+			mspID = "BypassMSP"
+		} else {
+			return errors.New("the local MSP must have an ID")
+		}
+	}
+
+	if msp.MSPBypassEnabled() {
+		return initBypassLocalMSP(mspID)
 	}
 
 	conf, err := msp.GetLocalMspConfigWithType(dir, bccspConfig, mspID, mspType)
@@ -35,7 +43,15 @@ func LoadLocalMspWithType(dir string, bccspConfig *factory.FactoryOpts, mspID, m
 // LoadLocalMsp loads the local MSP from the specified directory
 func LoadLocalMsp(dir string, bccspConfig *factory.FactoryOpts, mspID string) error {
 	if mspID == "" {
-		return errors.New("the local MSP must have an ID")
+		if msp.MSPBypassEnabled() {
+			mspID = "BypassMSP"
+		} else {
+			return errors.New("the local MSP must have an ID")
+		}
+	}
+
+	if msp.MSPBypassEnabled() {
+		return initBypassLocalMSP(mspID)
 	}
 
 	conf, err := msp.GetLocalMspConfig(dir, bccspConfig, mspID)
