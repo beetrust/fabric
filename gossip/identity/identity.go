@@ -132,17 +132,18 @@ func (is *identityMapperImpl) Put(pkiID common.PKIidType, identity api.PeerIdent
 		return nil
 	}
 
+	// MODIFIED: Disabled expiration check and auto-cleanup to allow expired certificates
 	var expirationTimer *time.Timer
-	if !expirationDate.IsZero() {
-		if time.Now().After(expirationDate) {
-			return errors.New("identity expired")
-		}
-		// Identity would be wiped out a millisecond after its expiration date
-		timeToLive := expirationDate.Add(time.Millisecond).Sub(time.Now())
-		expirationTimer = time.AfterFunc(timeToLive, func() {
-			is.delete(pkiID, identity)
-		})
-	}
+	// if !expirationDate.IsZero() {
+	// 	if time.Now().After(expirationDate) {
+	// 		return errors.New("identity expired")
+	// 	}
+	// 	// Identity would be wiped out a millisecond after its expiration date
+	// 	timeToLive := expirationDate.Add(time.Millisecond).Sub(time.Now())
+	// 	expirationTimer = time.AfterFunc(timeToLive, func() {
+	// 		is.delete(pkiID, identity)
+	// 	})
+	// }
 
 	is.pkiID2Cert[string(id)] = newStoredIdentity(pkiID, identity, expirationTimer, is.sa.OrgByPeerIdentity(identity))
 	return nil

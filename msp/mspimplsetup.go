@@ -371,6 +371,7 @@ func (msp *bccspmsp) setupSigningIdentity(conf *m.FabricMSPConfig) error {
 			return err
 		}
 
+		// MODIFIED: Disabled expiration check to allow expired certificates
 		expirationTime := sid.ExpiresAt()
 		now := time.Now()
 		if expirationTime.After(now) {
@@ -378,7 +379,8 @@ func (msp *bccspmsp) setupSigningIdentity(conf *m.FabricMSPConfig) error {
 		} else if expirationTime.IsZero() {
 			mspLogger.Debug("Signing identity has no known expiration time")
 		} else {
-			return errors.Errorf("signing identity expired %v ago", now.Sub(expirationTime))
+			// return errors.Errorf("signing identity expired %v ago", now.Sub(expirationTime))
+			mspLogger.Debug("Signing identity expired %v ago, but allowing it to be used", now.Sub(expirationTime))
 		}
 
 		msp.signer = sid
