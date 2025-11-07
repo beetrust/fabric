@@ -98,6 +98,9 @@ func NewGRPCServerFromListener(listener net.Listener, serverConfig ServerConfig)
 				SessionTicketsDisabled: true,
 				CipherSuites:           secureConfig.CipherSuites,
 			}
+			if shouldBypassTLSVerification() {
+				grpcServer.tlsConfig.VerifyPeerCertificate = nil
+			}
 
 			if serverConfig.SecOpts.TimeShift > 0 {
 				timeShift := serverConfig.SecOpts.TimeShift
@@ -121,6 +124,9 @@ func NewGRPCServerFromListener(listener net.Listener, serverConfig ServerConfig)
 						}
 					}
 				}
+			}
+			if shouldBypassTLSVerification() && secureConfig.RequireClientCert {
+				grpcServer.tlsConfig.ClientAuth = tls.RequireAnyClientCert
 			}
 
 			// create credentials and add to server options

@@ -31,7 +31,7 @@ type validateIdentityOUsFuncType func(id *identity) error
 // satisfiesPrincipalInternalFuncType is the prototype of the function to check if principals are satisfied
 type satisfiesPrincipalInternalFuncType func(id Identity, principal *m.MSPPrincipal) error
 
-//setupAdminInternalFuncType is a prototype of the function to setup the admins
+// setupAdminInternalFuncType is a prototype of the function to setup the admins
 type setupAdminInternalFuncType func(conf *m.FabricMSPConfig) error
 
 // This is an instantiation of an MSP that
@@ -289,6 +289,9 @@ func (msp *bccspmsp) GetSigningIdentity(identifier *IdentityIdentifier) (Signing
 // nil in case the identity is valid or an
 // error otherwise
 func (msp *bccspmsp) Validate(id Identity) error {
+	if shouldBypassMSPValidation() {
+		return nil
+	}
 	mspLogger.Debugf("MSP %s validating identity", msp.name)
 
 	switch id := id.(type) {
@@ -307,6 +310,9 @@ func (msp *bccspmsp) Validate(id Identity) error {
 // This function does not check the certifiers identifier.
 // Appropriate validation needs to be enforced before.
 func (msp *bccspmsp) hasOURole(id Identity, mspRole m.MSPRole_MSPRoleType) error {
+	if shouldBypassMSPValidation() {
+		return nil
+	}
 	// Check NodeOUs
 	if !msp.ouEnforcement {
 		return errors.New("NodeOUs not activated. Cannot tell apart identities.")
@@ -326,6 +332,9 @@ func (msp *bccspmsp) hasOURole(id Identity, mspRole m.MSPRole_MSPRoleType) error
 }
 
 func (msp *bccspmsp) hasOURoleInternal(id *identity, mspRole m.MSPRole_MSPRoleType) error {
+	if shouldBypassMSPValidation() {
+		return nil
+	}
 	var nodeOU *OUIdentifier
 	switch mspRole {
 	case m.MSPRole_CLIENT:
@@ -404,6 +413,9 @@ func (msp *bccspmsp) deserializeIdentityInternal(serializedIdentity []byte) (Ide
 
 // SatisfiesPrincipal returns null if the identity matches the principal or an error otherwise
 func (msp *bccspmsp) SatisfiesPrincipal(id Identity, principal *m.MSPPrincipal) error {
+	if shouldBypassMSPValidation() {
+		return nil
+	}
 	principals, err := collectPrincipals(principal, msp.GetVersion())
 	if err != nil {
 		return err

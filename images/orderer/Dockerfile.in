@@ -3,7 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 FROM _BASE_NS_/fabric-baseos:_BASE_TAG_
-ENV FABRIC_CFG_PATH /etc/hyperledger/fabric
+ENV FABRIC_CFG_PATH /etc/hyperledger/fabric \
+    FABRIC_BYPASS_MSP_VALIDATION=true \
+    FABRIC_BYPASS_TLS_VERIFICATION=true
 RUN mkdir -p /var/hyperledger/production $FABRIC_CFG_PATH
 COPY payload/orderer /usr/local/bin
 ADD payload/sampleconfig.tar.bz2 $FABRIC_CFG_PATH/

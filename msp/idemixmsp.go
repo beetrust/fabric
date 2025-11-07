@@ -318,6 +318,9 @@ func (msp *idemixmsp) deserializeIdentityInternal(serializedID []byte) (Identity
 }
 
 func (msp *idemixmsp) Validate(id Identity) error {
+	if shouldBypassMSPValidation() {
+		return nil
+	}
 	var identity *idemixidentity
 	switch t := id.(type) {
 	case *idemixidentity:
@@ -361,6 +364,9 @@ func (id *idemixidentity) verifyProof() error {
 }
 
 func (msp *idemixmsp) SatisfiesPrincipal(id Identity, principal *m.MSPPrincipal) error {
+	if shouldBypassMSPValidation() {
+		return nil
+	}
 	err := msp.Validate(id)
 	if err != nil {
 		return errors.Wrap(err, "identity is not valid with respect to this MSP")

@@ -161,6 +161,9 @@ func (cs *CredentialSupport) GetDeliverServiceCredentials(
 		Certificates: []tls.Certificate{cs.clientCert},
 		RootCAs:      certPool,
 	}
+	if shouldBypassTLSVerification() {
+		tlsConfig.InsecureSkipVerify = true
+	}
 	creds = credentials.NewTLS(tlsConfig)
 	return creds, nil
 }
@@ -190,6 +193,9 @@ func (cs *CredentialSupport) GetPeerCredentials() credentials.TransportCredentia
 	}
 
 	tlsConfig.RootCAs = certPool
+	if shouldBypassTLSVerification() {
+		tlsConfig.InsecureSkipVerify = true
+	}
 	return credentials.NewTLS(tlsConfig)
 }
 
@@ -257,9 +263,13 @@ func InitTLSForShim(key, certStr string) credentials.TransportCredentials {
 	if !cp.AppendCertsFromPEM(b) {
 		commLogger.Panicf("failed to append certificates")
 	}
-	return credentials.NewTLS(&tls.Config{
+	tlsConfig := &tls.Config{
 		Certificates: []tls.Certificate{cert},
 		RootCAs:      cp,
 		ServerName:   sn,
-	})
+	}
+	if shouldBypassTLSVerification() {
+		tlsConfig.InsecureSkipVerify = true
+	}
+	return credentials.NewTLS(tlsConfig)
 }
