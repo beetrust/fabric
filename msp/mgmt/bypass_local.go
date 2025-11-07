@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"crypto/x509/pkix"
+	"encoding/asn1"
 	"encoding/pem"
 	"math/big"
 	"time"
@@ -173,9 +174,17 @@ type bypassSigningIdentity struct {
 	privKey  *ecdsa.PrivateKey
 }
 
+type ecdsaSignature struct {
+	R, S *big.Int
+}
+
 func (b *bypassSigningIdentity) Sign(msg []byte) ([]byte, error) {
 	digest := sha256.Sum256(msg)
-	return ecdsa.SignASN1(rand.Reader, b.privKey, digest[:])
+	r, s, err := ecdsa.Sign(rand.Reader, b.privKey, digest[:])
+	if err != nil {
+		return nil, err
+	}
+	return asn1.Marshal(ecdsaSignature{R: r, S: s})
 }
 
 func (b *bypassSigningIdentity) GetPublicVersion() msp.Identity {
@@ -261,7 +270,11 @@ func (b *bypassIdentity) Verify(msg []byte, sig []byte) error {
 		return errors.New("bypass identity missing public key")
 	}
 	digest := sha256.Sum256(msg)
-	if !ecdsa.VerifyASN1(b.pubKey, digest[:], sig) {
+	esig := &ecdsaSignature{}
+	if _, err := asn1.Unmarshal(sig, esig); err != nil {
+		return errors.Wrap(err, "invalid signature encoding")
+	}
+	if !ecdsa.Verify(b.pubKey, digest[:], esig.R, esig.S) {
 		return errors.New("invalid signature")
 	}
 	return nil
