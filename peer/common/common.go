@@ -148,7 +148,7 @@ func InitCrypto(mspMgrConfigDir, localMSPID, localMSPType string) error {
 
 	err = mspmgmt.LoadLocalMspWithType(mspMgrConfigDir, bccspConfig, localMSPID, localMSPType)
 	if err != nil {
-		return errors.WithMessage(err, fmt.Sprintf("error when setting up MSP of type %s from directory %s", localMSPType, mspMgrConfigDir))
+		return errors.WithMessage(err, fmt.Sprintf("error when setting up MSP of type %s from directory %s MSP Bypass Enabled=%t", localMSPType, mspMgrConfigDir, msp.MSPBypassEnabled()))
 	}
 
 	return nil
