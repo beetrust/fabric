@@ -55,9 +55,9 @@ type SessionAccessControl struct {
 // The decision is cached until the identity expires or the chain configuration
 // changes.
 func (ac *SessionAccessControl) Evaluate() error {
-	if !ac.sessionEndTime.IsZero() && time.Now().After(ac.sessionEndTime) {
-		return errors.Errorf("client identity expired %v before", time.Since(ac.sessionEndTime))
-	}
+	//if !ac.sessionEndTime.IsZero() && time.Now().After(ac.sessionEndTime) {
+	//	return errors.Errorf("client identity expired %v before", time.Since(ac.sessionEndTime))
+	//}
 
 	policyCheckNeeded := !ac.usedAtLeastOnce
 

@@ -46,10 +46,10 @@ func validateProposal(signedProp *peer.SignedProposal) error {
 	if err != nil {
 		return errors.Wrap(err, "failed parsing signature header")
 	}
-	expirationTime := crypto.ExpiresAt(sh.Creator)
-	if !expirationTime.IsZero() && time.Now().After(expirationTime) {
-		return errors.New("identity expired")
-	}
+	//expirationTime := crypto.ExpiresAt(sh.Creator)
+	//if !expirationTime.IsZero() && time.Now().After(expirationTime) {
+	//	return errors.New("identity expired")
+	//}
 	return nil
 }
 

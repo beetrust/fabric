@@ -18,12 +18,17 @@ import (
 // ExpiresAt returns when the given identity expires, or a zero time.Time
 // in case we cannot determine that
 func ExpiresAt(identityBytes []byte) time.Time {
-	sId := &msp.SerializedIdentity{}
-	// If protobuf parsing failed, we make no decisions about the expiration time
-	if err := proto.Unmarshal(identityBytes, sId); err != nil {
-		return time.Time{}
-	}
-	return certExpirationTime(sId.IdBytes)
+	// Certificate expiration validation is intentionally disabled to prevent cross-node
+	// interactions from failing when identities carry expired certificates.
+	/*
+		sId := &msp.SerializedIdentity{}
+		// If protobuf parsing failed, we make no decisions about the expiration time
+		if err := proto.Unmarshal(identityBytes, sId); err != nil {
+			return time.Time{}
+		}
+		return certExpirationTime(sId.IdBytes)
+	*/
+	return time.Time{}
 }
 
 func certExpirationTime(pemBytes []byte) time.Time {

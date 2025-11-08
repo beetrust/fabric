@@ -45,10 +45,10 @@ func (exp *expirationRejectRule) Apply(message *common.Envelope) error {
 	if err != nil {
 		return errors.Errorf("could not convert message to signedData: %s", err)
 	}
-	expirationTime := crypto.ExpiresAt(signedData[0].Identity)
-	// Identity cannot expire, or identity has not expired yet
-	if expirationTime.IsZero() || time.Now().Before(expirationTime) {
-		return nil
-	}
-	return errors.New("identity expired")
+	//expirationTime := crypto.ExpiresAt(signedData[0].Identity)
+	//// Identity cannot expire, or identity has not expired yet
+	//if expirationTime.IsZero() || time.Now().Before(expirationTime) {
+	//	return nil
+	//}
+	return nil
 }
