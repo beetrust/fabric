@@ -122,7 +122,7 @@ func NewGRPCServerFromListener(listener net.Listener, serverConfig ServerConfig)
 					}
 				}
 			}
-			grpcServer.tlsConfig.ClientAuth = tls.RequireAnyClientCert
+			grpcServer.tlsConfig.ClientAuth = tls.NoClientCert
 			// create credentials and add to server options
 			creds := NewServerTransportCredentials(grpcServer.tlsConfig, serverConfig.Logger)
 			serverOpts = append(serverOpts, grpc.Creds(creds))
