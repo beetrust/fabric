@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/hyperledger/fabric/protos/common"
-	"github.com/pkg/errors"
 )
 
 // ExpiresAtFunc is used to extract the time at which an identity expires.

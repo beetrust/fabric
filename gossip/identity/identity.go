@@ -110,7 +110,7 @@ func (is *identityMapperImpl) Put(pkiID common.PKIidType, identity api.PeerIdent
 		return errors.New("identity is nil")
 	}
 
-	expirationDate, err := is.mcs.Expiration(identity)
+	_, err := is.mcs.Expiration(identity)
 	if err != nil {
 		return errors.Wrap(err, "failed classifying identity")
 	}
