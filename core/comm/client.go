@@ -113,9 +113,6 @@ func (client *GRPCClient) parseSecureOptions(opts *SecureOptions) error {
 		}
 	}
 
-	client.tlsConfig.InsecureSkipVerify = true
-	client.tlsConfig.VerifyPeerCertificate = nil
-
 	return nil
 }
 
