@@ -8,9 +8,7 @@ package filter
 
 import (
 	"context"
-	"time"
 
-	"github.com/hyperledger/fabric/common/crypto"
 	"github.com/hyperledger/fabric/core/handlers/auth"
 	"github.com/hyperledger/fabric/protos/peer"
 	"github.com/hyperledger/fabric/protos/utils"
@@ -42,7 +40,7 @@ func validateProposal(signedProp *peer.SignedProposal) error {
 		return errors.Wrap(err, "failed parsing header")
 	}
 
-	sh, err := utils.GetSignatureHeader(hdr.SignatureHeader)
+	_, err = utils.GetSignatureHeader(hdr.SignatureHeader)
 	if err != nil {
 		return errors.Wrap(err, "failed parsing signature header")
 	}

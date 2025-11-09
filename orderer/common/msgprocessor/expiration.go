@@ -7,10 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 package msgprocessor
 
 import (
-	"time"
-
 	"github.com/hyperledger/fabric/common/channelconfig"
-	"github.com/hyperledger/fabric/common/crypto"
 	"github.com/hyperledger/fabric/protos/common"
 	"github.com/pkg/errors"
 )
@@ -40,7 +37,7 @@ func (exp *expirationRejectRule) Apply(message *common.Envelope) error {
 	if !ordererConf.Capabilities().ExpirationCheck() {
 		return nil
 	}
-	signedData, err := message.AsSignedData()
+	_, err := message.AsSignedData()
 
 	if err != nil {
 		return errors.Errorf("could not convert message to signedData: %s", err)
